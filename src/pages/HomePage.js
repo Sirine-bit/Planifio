@@ -16,7 +16,7 @@ const HomePage = () => {
       <Header />
       <main className="hero-section">
         <div className="hero-content">
-          <h1>the only work management platform designed to assess according to your needs</h1>
+          <h1>The only work management platform designed to assess according to your needs</h1>
           <p>With planifio, set company-wide goals, manage strategic plans, and accomplish your work in the same place.</p>
           <button onClick={handleGetStarted} className="cta-button">Get Started</button>
         </div>
