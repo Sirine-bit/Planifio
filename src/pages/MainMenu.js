@@ -42,7 +42,24 @@ const MainMenu = () => {
               <a href="/activity"><FaChartLine />Activity</a>
             </li>
             <li>
-              <a href="/mystaff"><FaChartPie />My staff</a>
+              <button onClick={toggleMyStaffMenu}><FaChartPie />My staff</button>
+
+              {showMyStaffMenu && (
+                <ul className="dropdown-content">
+                  <li>
+                    <a href="/myassignments">My Assignments</a>
+                  </li>
+                  <li>
+                    <a href="/myschedule">My Schedule</a>
+                  </li>
+                  <li>
+                    <a href="/holidaysrequestandabsences">
+                      Holidays Request and Absences
+                    </a>
+                  </li>
+                </ul>
+              )}
+c
             </li>
           </ul>
         </nav>
@@ -53,6 +70,20 @@ const MainMenu = () => {
             className="profile-img"
             onClick={toggleProfileMenu}
           />
+          {showProfileMenu && (
+            <ul className="profile-menu">
+              <li>
+                <a href="/profile">View Profile</a>
+              </li>
+              <li>
+                <a href="/settings">Settings</a>
+              </li>
+              <li>
+                <a href="/logout">Log Out</a>
+              </li>
+            </ul>
+          )}
+
         </div>
       </header>
 
