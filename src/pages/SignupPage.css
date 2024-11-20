@@ -41,6 +41,7 @@
 .logo {
   max-width: 150px;
   height: auto;
+  margin: auto;
 }
 
 .form-group {

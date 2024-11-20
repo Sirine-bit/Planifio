@@ -11,6 +11,8 @@ import Hey from './pages/Hey';
 import Activity from './pages/Activity'; 
 import MyAssignments from './pages/MyAssignments'; 
 import HolidaysRequestAndAbsences from './pages/HolidaysRequestAndAbsences'; 
+import MakeProject from './pages/MakeProject';
+import InvitePeople from './pages/InvitePeople';
 import './App.css';
 
 const App = () => {
@@ -28,6 +30,8 @@ const App = () => {
         <Route path="/myassignments" element={<MyAssignments />} />
         <Route path="/myschedule" element={<MySchedule />} />
         <Route path="/holidaysrequestandabsences" element={<HolidaysRequestAndAbsences />} />
+        <Route path="/makeProject" element={<MakeProject />} />
+        <Route path="/invitePeople" element={<InvitePeople />} />
       </Routes>
     </Router>
   );
