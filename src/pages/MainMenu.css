@@ -1,7 +1,15 @@
 .main-menu {
   padding: 20px;
   min-height: 100vh;
-  background: linear-gradient(to bottom, #f4f7fc, #c3d5e4);
+  background: linear-gradient(120deg, #f4f7fc 0%, #bfe2fe 100%);
+  animation: gradient-animation 6s infinite;
+  background-size: 200% 200%;
+  z-index: 0;
+}
+@keyframes gradient-animation {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 .main-menu-header {

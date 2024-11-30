@@ -58,13 +58,15 @@
   top: 50%;
   transform: translateY(-50%);
   color: #6c757d;
+  margin-right: 8px; /* Ajoute de l'espace à droite de l'icône */
 }
 
 .form-control {
-  padding-left: 40px;
+  padding-left: 50px;
   height: 48px;
   border-radius: 8px;
 }
+
 
 .btn-primary {
   height: 48px;

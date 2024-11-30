@@ -34,6 +34,7 @@ const App = () => {
         <Route path="/invitePeople" element={<InvitePeople />} />
       </Routes>
     </Router>
+    
   );
 };
 
