@@ -3,7 +3,7 @@ import "./MainMenu.css";
 import { FaChartPie, FaGear, FaGears, FaPerson, FaRightFromBracket } from "react-icons/fa6";
 import { FaHome, FaCalendar, FaComments, FaBell, FaChartLine, FaChevronLeft, FaChevronRight, FaUser } from 'react-icons/fa';
 import { PiFacebookLogoDuotone } from "react-icons/pi";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link, Outlet } from 'react-router-dom';
 
 const MainMenu = () => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
@@ -116,19 +116,20 @@ const MainMenu = () => {
               {showMyStaffMenu && (
                 <ul className="profile-menu">
                   <li>
-                    <a href="/myassignments">My Assignments</a>
+                    <Link to="myassignments">My Assignments</Link>
                   </li>
                   <li>
-                    <a href="/myschedule">My Schedule</a>
+                    <Link to="myschedule">My Schedule</Link>
                   </li>
                   <li>
-                    <a href="/holidaysrequestandabsences">
+                    <Link to="holidaysrequestandabsences">
                       Holidays Request and Absences
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               )}
             </li>
+              <Outlet />
           </ul>
         </nav>
         <div className="profile-section" ref={profileRef}>
@@ -216,7 +217,10 @@ const MainMenu = () => {
           </div>
         </div>
       </div>
+      <Outlet />
+
     </div>
+    
   );
 };
 

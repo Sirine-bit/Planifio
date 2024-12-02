@@ -1,0 +1,126 @@
+/* MySchedule.css */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .schedule-container {
+    background-color: white;
+    width: 80%;
+    max-width: 900px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+  }
+  
+  .schedule-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .new-event-btn {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .new-event-btn:hover {
+    background-color: #0056b3;
+  }
+  
+  h1 {
+    font-size: 2rem;
+  }
+  
+  .calendar {
+    margin-top: 30px;
+  }
+  
+  .calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .calendar-header h2 {
+    font-size: 1.5rem;
+  }
+  
+  .calendar-body {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  .calendar-dates {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    grid-template-rows: repeat(5, 50px);
+    margin-top: 10px;
+  }
+  
+  .date {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .date:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .event {
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    font-size: 0.8rem;
+    color: #333;
+    background-color: #fffae5;
+    padding: 2px 5px;
+    border-radius: 5px;
+  }
+  
+  .events-list {
+    margin-top: 20px;
+  }
+  
+  .event-item {
+    margin-bottom: 15px;
+  }
+  
+  .event-item h3 {
+    font-size: 1.2rem;
+    color: #333;
+  }
+  
+  .event-item p {
+    font-size: 0.9rem;
+    color: #666;
+  }
+  
