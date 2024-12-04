@@ -1,13 +1,9 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import axios from 'axios';
+import axiosInstance from './axios_config';
+import LoadingScreen from '../components/LoadingScreen';
 
 // Create AuthContext
 const AuthContext = createContext(null);
-
-const axiosInstance = axios.create({
-    baseURL: 'http://localhost:5000',
-});
-
 // AuthProvider Component
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -18,7 +14,7 @@ export const AuthProvider = ({ children }) => {
   // Login function
   const login = async (email, password) => {
     try {
-      const response = await axiosInstance.post('/api/auth/login', { email, password });
+      const response = await axiosInstance.post('/api/login', { email, password });
       
       // Store token in localStorage
       localStorage.setItem('token', response.data.token);
@@ -46,13 +42,12 @@ export const AuthProvider = ({ children }) => {
   // Check authentication on app load
   useEffect(() => {
     const token = localStorage.getItem('token');
-    console.log(token);
     
     const verifyToken = async () => {
       if (token) {
         try {
           // You'll need a backend route to verify the token
-          const response = await axiosInstance.get('/api/auth/verify', {
+          const response = await axiosInstance.get('/api/verify', {
             headers: { Authorization: `Bearer ${token}` }
           });
           
@@ -91,7 +86,7 @@ export const AuthProvider = ({ children }) => {
   // Create a protected route component
   const ProtectedRoute = ({ children }) => {
     if (loading) {
-      return <div>Loading...</div>; // Or a spinner
+      return <LoadingScreen />;
     }
 
     if (!isAuthenticated) {

@@ -9,20 +9,22 @@ import MainMenu from './pages/MainMenu';
 // import MySchedule from './pages/MySchedule';
 // import Hey from './pages/Hey'; 
 // import Activity from './pages/Activity'; 
-import CreateAssignment from './pages/MyAssignments'; 
 import HolidaysRequestAndAbsences from './pages/HolidaysRequestAndAbsences'; 
 import MakeProject from './pages/MakeProject';
 import InvitePeople from './pages/InvitePeople';
 import DashboardPage from './pages/DashboardPage';
 import './App.css';
-import { AuthProvider, useAuth } from './helpers/wrapper'; // Assume you'll create this
+import { AuthProvider, useAuth } from './helpers/wrapper';
+import Modal from 'react-modal';
+import LoadingScreen from './components/LoadingScreen';
 
+Modal.setAppElement('#root');
 // Wrap protected routes
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
 
   if (loading) {
-    return <div>Loading...</div>; // Or a spinner
+    return <LoadingScreen />; // Or a spinner
   }
 
   console.log(isAuthenticated);
@@ -43,8 +45,6 @@ const App = () => {
           <Route path="/" element={<HomePage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="myassignments" element={<CreateAssignment />} />
-
           {/* Protected Routes - Nested under MainMenu */}
           <Route 
             path="/mainmenu" 
@@ -59,7 +59,6 @@ const App = () => {
             {/* <Route path="pings" element={<Pings />} /> */}
             {/* <Route path="hey" element={<Hey />} /> */}
             {/* <Route path="activity" element={<Activity />} /> */}
-            <Route path="myassignments" element={<CreateAssignment />} />
             <Route path="myschedule" element={<div>My Schedule Page</div>} />
             <Route 
               path="holidaysrequestandabsences" 

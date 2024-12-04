@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const authRoutes = require('./routes/auth');  // Importation des routes d'authentification
+const authRoutes = require('./routes/routes');  // Importation des routes d'authentification
 
 dotenv.config(); // Charge les variables d'environnement
 const app = express();
@@ -20,7 +20,6 @@ app.get('/', (_req, res) => {
     res.send('Planifio Backend Running!');
 });
 
-// Connexion à MongoDB
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("✅ MongoDB connected"))
@@ -30,14 +29,12 @@ mongoose
   });
 
 // Routes d'authentification
-app.use('/api/auth', authRoutes);  // Ajout des routes d'authentification
+app.use('/api', authRoutes);
 
-// Gestion des erreurs de route (404)
 app.use((_req, res) => {
-  res.status(404).send('Route not found');
+  res.status(404).send('Backend Works, Linked, But Route not found');
 });
 
-// Middleware de gestion des erreurs générales
 app.use((err, _req, res) => {
   console.error(err.stack);
   res.status(500).send('Something went wrong!');

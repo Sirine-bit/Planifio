@@ -1,19 +1,31 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./MainMenu.css";
-import { FaChartPie, FaGear, FaGears, FaPerson, FaRightFromBracket } from "react-icons/fa6";
+import { FaChartPie, FaGear, FaRightFromBracket } from "react-icons/fa6";
 import { FaHome, FaCalendar, FaComments, FaBell, FaChartLine, FaChevronLeft, FaChevronRight, FaUser } from 'react-icons/fa';
-import { PiFacebookLogoDuotone } from "react-icons/pi";
-import { useNavigate, Link, Outlet } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import Modal from 'react-modal';
+import CreateAssignment from '../components/CreateAssignmentDialog';
+import { useAuth } from '../helpers/wrapper';
+import LoadingScreen from "../components/LoadingScreen";
+import AssignmentList from "../components/myAssignments";
+import { Avatar } from "../components/avatar";
 
 const MainMenu = () => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showMyStaffMenu, setShowMyStaffMenu] = useState(false);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [highlightedDates] = useState([5, 16, 25, 27]);
+  const { user, assignments, setAssignments, isLoading } = useAuth();
   const navigate = useNavigate();
   // Create refs for the menu containers
   const profileRef = useRef(null);
   const myStaffRef = useRef(null);
+
+
+  const [isAddAssignmentModalOpen, setIsAddAssignmentModalOpen] = useState(false);
+
+  const openAddAssignmentModal = () => setIsAddAssignmentModalOpen(true);
+  const closeAddAssignmentModal = () => setIsAddAssignmentModalOpen(false);
 
   const months = [
     "January", "February", "March", "April", "May", "June",
@@ -86,6 +98,12 @@ const MainMenu = () => {
     navigate('/invitePeople');
   };
 
+  console.log(user);
+
+  if(isLoading) {
+    return <LoadingScreen />;
+  }
+
   return (
     <div className="main-menu">
       <header className="main-menu-header">
@@ -116,7 +134,7 @@ const MainMenu = () => {
               {showMyStaffMenu && (
                 <ul className="profile-menu">
                   <li>
-                    <Link to="myassignments">My Assignments</Link>
+                    <button onClick={openAddAssignmentModal}>Add Assignment</button >
                   </li>
                   <li>
                     <Link to="myschedule">My Schedule</Link>
@@ -129,10 +147,14 @@ const MainMenu = () => {
                 </ul>
               )}
             </li>
-              <Outlet />
           </ul>
         </nav>
         <div className="profile-section" ref={profileRef}>
+          {/* <Avatar 
+            imageUrl={user?.profileImage} 
+            size="sm"
+            className="cursor-pointer hover:opacity-80"
+          /> */}
           <img
             src="/assets/profile.png"
             alt="Profile"
@@ -201,24 +223,26 @@ const MainMenu = () => {
 
         <div className="assignments-section">
           <h2>Your assignments</h2>
-          <div className="assignments-list">
-            <div className="assignment-item completed">
-              <input type="checkbox" checked readOnly />
-              <span>view mails</span>
-            </div>
-            <div className="assignment-item">
-              <input type="checkbox" />
-              <span>meeting at 10:30</span>
-            </div>
-            <div className="assignment-item">
-              <input type="checkbox" />
-              <span>prepare documents</span>
-            </div>
-          </div>
+          <AssignmentList assignments={assignments} setAssignments={setAssignments} />
         </div>
       </div>
-      <Outlet />
+      <Modal
+        isOpen={isAddAssignmentModalOpen}
+        onRequestClose={closeAddAssignmentModal}
+        contentLabel="Create Assignment Modal"
+        className="custom-modal"
+        overlayClassName="custom-overlay"
+        shouldCloseOnOverlayClick={true}
+        shouldCloseOnEsc={true}
+        onAfterClose={() => setAssignments}
 
+
+      >
+        <button className="close-btn" onClick={closeAddAssignmentModal}>
+          &times;
+        </button>
+        <CreateAssignment onClose={closeAddAssignmentModal} />
+      </Modal>
     </div>
     
   );

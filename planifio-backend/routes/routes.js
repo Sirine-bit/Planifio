@@ -4,38 +4,37 @@ const User = require('../models/User');
 const Assignment = require('../models/Assignment');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-router = express.Router();
+const router = express.Router();
 const authMiddleware = require('../helpers/authMiddleWare')
 
 // Route d'inscription
 router.post('/signup', async (req, res) => {
-  const { username, email, password, organization } = req.body;
+  const { username, email, password, organization, image } = req.body;
 
   try {
-      // Vérifier si l'utilisateur existe déjà
-      const existingUser = await User.findOne({ email });
-      if (existingUser) {
-          return res.status(400).json({ message: 'User already exists' });
-      }
+    // Check if user exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: 'User already exists' });
+    }
 
-      // Hacher le mot de passe
-      const hashedPassword = await bcrypt.hash(password, 10);
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-      // Créer un nouvel utilisateur
-      const newUser = new User({
-          username,
-          email,
-          password: hashedPassword,
-          organization
-      });
+    // Create new user with image
+    const newUser = new User({
+      username,
+      email,
+      password: hashedPassword,
+      organization,
+      profileImage: image
+    });
 
-      // Sauvegarder l'utilisateur dans la base de données
-      await newUser.save();
-
-      res.status(201).json({ message: 'Account created successfully!' });
+    await newUser.save();
+    res.status(201).json({ message: 'Account created successfully!' });
   } catch (err) {
-      console.error(err);
-      res.status(500).json({ message: 'Server error' });
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
   }
 });
 
@@ -56,7 +55,7 @@ router.post('/login', async (req, res) => {
     // Comparez le mot de passe fourni avec celui stocké
     console.log(password)
     const isCorrect = await bcrypt.compare(password, user.password);
-    if (isCorrect) {
+    if (!isCorrect) {
       return res.status(400).json({ message: 'Incorrect password' });
     }
 
@@ -86,7 +85,8 @@ router.post('/login', async (req, res) => {
         id: user._id,
         username: user.username,
         email: user.email,
-        organization: user.organization
+        organization: user.organization,
+        profileImage: user.profileImage? user.profileImage : null
       },
       assignments 
     });
@@ -110,9 +110,10 @@ router.get('/verify', authMiddleware, async (req, res) => {
         id: user._id,
         username: user.username,
         email: user.email,
-        organization: user.organization
+        organization: user.organization,
+        profileImage: user.profileImage? user.profileImage : null
       },
-      assignments 
+      assignments
     });
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
@@ -160,6 +161,26 @@ router.get('/assignments/:userId', async (req, res) => {
   } catch (error) {
     console.error('Error fetching assignments:', error);
     res.status(500).json({ message: 'Error fetching assignments' });
+  }
+});
+
+router.put('/assignments/:id', async (req, res) => {
+  try {
+    const { isDone } = req.body;
+    const updatedAssignment = await Assignment.findByIdAndUpdate(
+      req.params.id,
+      { isDone },
+      { new: true }
+    );
+
+    if (!updatedAssignment) {
+      return res.status(404).json({ error: 'Assignment not found' });
+    }
+
+    res.json(updatedAssignment);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to update assignment' });
   }
 });
 
