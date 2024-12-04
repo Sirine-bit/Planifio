@@ -8,11 +8,6 @@ export const Avatar = ({ imageUrl, size = "md", className = "" }) => {
       xl: "w-24 h-24"
     };
 
-    console.log(imageUrl);
-
-    // the image is in base64 format so we need to convert it to a file
-    // const file = new File([new Blob([new Uint8Array(imageUrl)])], "profile.png", { type: "image/png" });
-  
     return (
       <div className={`${sizeClasses[size]} relative rounded-full overflow-hidden ${className}`}>
         {imageUrl ? (

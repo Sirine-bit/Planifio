@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./MainMenu.css";
-import { FaChartPie, FaGear, FaRightFromBracket } from "react-icons/fa6";
+import { FaChartPie, FaGear, FaRightFromBracket, FaSquarePlus } from "react-icons/fa6";
 import { FaHome, FaCalendar, FaComments, FaBell, FaChartLine, FaChevronLeft, FaChevronRight, FaUser } from 'react-icons/fa';
 import { useNavigate, Link } from 'react-router-dom';
 import Modal from 'react-modal';
@@ -107,10 +107,10 @@ const MainMenu = () => {
   return (
     <div className="main-menu">
       <header className="main-menu-header">
-        <div className="logo">
+        <a className="logo cursor-pointer decoration-solid" href="/">
           <img src="/assets/logo.png" alt="Planifio Logo" />
-          <span className="logo-text">planifio</span>
-        </div>
+          <span className="logo-text">Planifio</span>
+        </a>
         <nav className="navbar">
           <ul className="nav-links">
             <li>
@@ -129,18 +129,23 @@ const MainMenu = () => {
               <a href="/activity"><FaChartLine /> Activity</a>
             </li>
             <li ref={myStaffRef}>
-              <button onClick={toggleMyStaffMenu}><FaChartPie /> My staff</button>
-
+              <a onClick={toggleMyStaffMenu} className="cursor-pointer"><FaChartPie /> My staff</a>
               {showMyStaffMenu && (
                 <ul className="profile-menu">
-                  <li>
-                    <button onClick={openAddAssignmentModal}>Add Assignment</button >
+                  <li className="cursor-pointer">
+                    <a onClick={openAddAssignmentModal} >
+                      <FaSquarePlus/>
+                      Add Assignment
+                    </a>
                   </li>
-                  <li>
-                    <Link to="myschedule">My Schedule</Link>
+                  <li className="cursor-pointer">
+                    <Link to="myschedule">
+                    <FaCalendar/>
+                    My Schedule</Link>
                   </li>
-                  <li>
+                  <li className="cursor-pointer">
                     <Link to="holidaysrequestandabsences">
+                      <FaCalendar/>
                       Holidays Request and Absences
                     </Link>
                   </li>
@@ -150,17 +155,13 @@ const MainMenu = () => {
           </ul>
         </nav>
         <div className="profile-section" ref={profileRef}>
-          {/* <Avatar 
-            imageUrl={user?.profileImage} 
-            size="sm"
-            className="cursor-pointer hover:opacity-80"
-          /> */}
-          <img
-            src="/assets/profile.png"
-            alt="Profile"
-            className="profile-img"
-            onClick={toggleProfileMenu}
-          />
+          <a href="#" onClick={toggleProfileMenu}>
+            <Avatar 
+              imageUrl={user?.profileImage} 
+              size="md"
+              className="cursor-pointer hover:opacity-80"
+            />
+          </a>
           {showProfileMenu && (
             <ul className="profile-menu">
               <li>
@@ -235,8 +236,6 @@ const MainMenu = () => {
         shouldCloseOnOverlayClick={true}
         shouldCloseOnEsc={true}
         onAfterClose={() => setAssignments}
-
-
       >
         <button className="close-btn" onClick={closeAddAssignmentModal}>
           &times;
