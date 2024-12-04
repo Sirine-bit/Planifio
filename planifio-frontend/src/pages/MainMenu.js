@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import "./MainMenu.css";
 import { FaChartPie, FaGear, FaRightFromBracket, FaSquarePlus } from "react-icons/fa6";
 import { FaHome, FaCalendar, FaComments, FaBell, FaChartLine, FaChevronLeft, FaChevronRight, FaUser } from 'react-icons/fa';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, Outlet } from 'react-router-dom';
 import Modal from 'react-modal';
 import CreateAssignment from '../components/CreateAssignmentDialog';
 import { useAuth } from '../helpers/wrapper';
@@ -242,6 +242,8 @@ const MainMenu = () => {
         </button>
         <CreateAssignment onClose={closeAddAssignmentModal} />
       </Modal>
+      
+      <Outlet />
     </div>
     
   );
