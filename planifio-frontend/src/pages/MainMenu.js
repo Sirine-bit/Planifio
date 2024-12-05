@@ -15,7 +15,7 @@ const MainMenu = () => {
   const [showMyStaffMenu, setShowMyStaffMenu] = useState(false);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [highlightedDates] = useState([5, 16, 25, 27]);
-  const { user, assignments, setAssignments, isLoading } = useAuth();
+  const { user, assignments, setAssignments, isLoading, logout } = useAuth();
   const navigate = useNavigate();
   // Create refs for the menu containers
   const profileRef = useRef(null);
@@ -170,8 +170,8 @@ const MainMenu = () => {
               <li>
                 <a href="/settings"><FaGear/> Settings</a>
               </li>
-              <li>
-                <a href="/logout"><FaRightFromBracket/> Log Out</a>
+              <li className="cursor-pointer flex items-center space-x-3">
+                <FaRightFromBracket/><button onClick={logout}>Log Out</button>
               </li>
             </ul>
           )}
