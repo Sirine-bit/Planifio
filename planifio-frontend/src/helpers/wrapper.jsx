@@ -1,6 +1,7 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import axiosInstance from './axios_config';
 import LoadingScreen from '../components/LoadingScreen';
+import PropTypes from 'prop-types';
 
 // Create AuthContext
 const AuthContext = createContext(null);
@@ -126,6 +127,10 @@ export const AuthProvider = ({ children }) => {
       {children}
     </AuthContext.Provider>
   );
+};
+
+AuthProvider.propTypes = {
+  children: PropTypes.node.isRequired
 };
 
 // Custom hook to use the AuthContext

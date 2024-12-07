@@ -8,12 +8,15 @@ import CreateAssignment from '../components/CreateAssignmentDialog';
 import { useAuth } from '../helpers/wrapper';
 import LoadingScreen from "../components/LoadingScreen.jsx";
 import AssignmentList from "../components/myAssignments.jsx";
-import { Avatar } from "./avatar.jsx";
+import { Avatar } from "../components/avatar.jsx";
 import ProjectModal from "../components/ProjectModal.jsx";
+import ChatModal from "../components/pings.jsx";
 
 const MainMenu = () => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showMyStaffMenu, setShowMyStaffMenu] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
+
   const [currentDate, setCurrentDate] = useState(new Date());
   const [highlightedDates] = useState([5, 16, 25, 27]);
   const { user, assignments, setAssignments, isLoading, logout } = useAuth();
@@ -117,7 +120,10 @@ const MainMenu = () => {
               <a href="/lineup"><FaCalendar /> LineUp</a>
             </li>
             <li>
-              <a href="/pings"><FaComments /> Pings</a>
+              <button onClick={() => setIsChatOpen(true)} className="aligned-button">
+                <FaComments /> Pings
+              </button>
+              <ChatModal isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
             </li>
             <li>
               <a href="/hey"><FaBell /> Hey!</a>
@@ -126,25 +132,25 @@ const MainMenu = () => {
               <a href="/activity"><FaChartLine /> Activity</a>
             </li>
             <li ref={myStaffRef}>
-              <button onClick={toggleMyStaffMenu} className="cursor-pointer flex items-center justify-center space-x-3">
+              <button onClick={toggleMyStaffMenu} className="aligned-button">
                 <FaChartPie />
                 <div>My staff</div>
               </button>
               {showMyStaffMenu && (
                 <ul className="profile-menu">
                   <li className="cursor-pointer">
-                    <button onClick={openAddAssignmentModal} className="flex items-center justify-center space-x-3" >
+                    <button onClick={openAddAssignmentModal} className="aligned-button" >
                       <FaSquarePlus/>
                       <div>Add Assignment</div>
                     </button>
                   </li>
                   <li className="cursor-pointer">
-                    <Link to="myschedule">
+                    <Link to="MySchedule">
                     <FaCalendar/>
                     My Schedule</Link>
                   </li>
                   <li className="cursor-pointer">
-                    <Link to="holidaysrequestandabsences">
+                    <Link to="HolidaysRequest">
                       <FaCalendar/>
                       Holidays Request and Absences
                     </Link>
@@ -155,13 +161,13 @@ const MainMenu = () => {
           </ul>
         </nav>
         <div className="profile-section" ref={profileRef}>
-          <a href="#" onClick={toggleProfileMenu}>
+          <button onClick={toggleProfileMenu}>
             <Avatar 
               imageUrl={user?.profileImage} 
               size="md"
               className="cursor-pointer hover:opacity-80"
             />
-          </a>
+          </button>
           {showProfileMenu && (
             <ul className="profile-menu">
               <li>
@@ -170,7 +176,7 @@ const MainMenu = () => {
               <li>
                 <a href="/settings"><FaGear/> Settings</a>
               </li>
-              <li className="cursor-pointer flex items-center space-x-3">
+              <li className="aligned-button">
                 <FaRightFromBracket/><button onClick={logout}>Log Out</button>
               </li>
             </ul>

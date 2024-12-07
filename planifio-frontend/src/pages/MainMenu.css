@@ -12,6 +12,14 @@
   100% { background-position: 0% 50%; }
 }
 
+.aligned-button {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
 .main-menu-header {
   display: flex;
   align-items: center;

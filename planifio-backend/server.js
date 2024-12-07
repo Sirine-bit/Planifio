@@ -25,7 +25,7 @@ mongoose
   .then(() => console.log("✅ MongoDB connected"))
   .catch((error) => {
     console.error("❌ Error connecting to MongoDB:", error.message);
-    process.exit(1);  // Si la connexion échoue, on arrête le processus
+    process.exit(1);
   });
 
 // Routes d'authentification

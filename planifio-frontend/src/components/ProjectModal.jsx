@@ -4,6 +4,7 @@ import Modal from 'react-modal';
 import DatePicker from 'react-datepicker';
 import { CSSTransition } from 'react-transition-group';
 import { useAuth } from '../helpers/wrapper';
+import axiosInstance from '../helpers/axios_config';
 
 const ProjectModal = ({ isOpen, onClose }) => {
   const [formData, setFormData] = useState({
@@ -15,18 +16,18 @@ const ProjectModal = ({ isOpen, onClose }) => {
   });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
-  const { organizationMembers } = useAuth();
+  const { user, organizationMembers } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('/api/projects', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
+      const userFormData = {
+        ...formData,
+        userId: user.id,
+      }
+      const response = axiosInstance.post('/api/projects', userFormData);
 
-      if (!response.ok) throw new Error('Failed to create project');
+      if (!(await response).status == 201) throw new Error('Failed to create project');
 
       setSuccess(true);
       setTimeout(() => {

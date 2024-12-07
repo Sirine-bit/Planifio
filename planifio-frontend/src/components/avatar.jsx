@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export const Avatar = ({ imageUrl, size = "md", className = "" }) => {
     // Define fixed pixel values as a fallback
@@ -6,7 +7,12 @@ export const Avatar = ({ imageUrl, size = "md", className = "" }) => {
       sm: "w-8 h-8 min-w-[2rem] min-h-[2rem]",
       md: "w-12 h-12 min-w-[3rem] min-h-[3rem]",
       lg: "w-16 h-16 min-w-[4rem] min-h-[4rem]",
-      xl: "w-24 h-24 min-w-[6rem] min-h-[6rem]"
+    };
+    
+    Avatar.propTypes = {
+      imageUrl: PropTypes.string,
+      size: PropTypes.oneOf(["sm", "md", "lg", "xl"]),
+      className: PropTypes.string
     };
 
     return (

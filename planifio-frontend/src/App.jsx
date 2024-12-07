@@ -58,9 +58,9 @@ const App = () => {
             {/* <Route path="pings" element={<Pings />} /> */}
             {/* <Route path="hey" element={<Hey />} /> */}
             {/* <Route path="activity" element={<Activity />} /> */}
-            <Route path="myschedule" element={<div>My Schedule Page</div>} />
+            <Route path="MySchedule" element={<div>My Schedule Page</div>} />
             <Route 
-              path="holidaysrequestandabsences" 
+              path="HolidaysRequest" 
               element={<HolidaysRequestAndAbsences />} 
             />
             <Route path="invitePeople" element={<InvitePeople />} />

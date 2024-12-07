@@ -6,13 +6,20 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
 const authMiddleware = require('../helpers/authMiddleWare')
+const Message = require('../models/Message');
+const Conversation = require('../models/Conversation');
 
 async function userData(user) {
   const organizationMembers = await User.find(
     { organization: user.organization, _id: { $ne: user._id } }, // Exclude current user
     { password: 0 } // Exclude password field
   );
-  const projects = await Project.find({ teamMembers: user._id });
+  const projects = await Project.find({
+    $or: [
+      { userId: user._id }, // Condition for the creator
+      { teamMembers: user._id } // Condition for team members
+    ]
+  });
   const assignments = await Assignment.find({ userID: user._id });
 
   return {
@@ -109,7 +116,7 @@ router.get('/verify', authMiddleware, async (req, res) => {
 });
 
 // Route pour obtenir la liste des utilisateurs
-router.get('/users',async (req, res) => {
+router.get('/users', async (req, res) => {
   try {
     const users = await User.find();
     res.status(200).json(users);
@@ -190,6 +197,108 @@ router.get('/projects', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+router.get('/conversations', authMiddleware, async (req, res) => {
+  console.log("Creating conversation");
+  console.log(req.body);  
+  try {
+    const conversations = await Conversation.find({
+      participants: req.user.userId
+    })
+    .populate('participants', 'name profileImage')
+    .populate('lastMessage')
+    .sort({ updatedAt: -1 });
+    res.json(conversations);
+  } catch (error) {
+    console.error('Error fetching conversations:', error);
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Create new conversation
+router.post('/conversations', authMiddleware, async (req, res) => {
+  try {
+    const { participantId } = req.body;
+    
+    // Check if conversation already exists
+    const existingConversation = await Conversation.findOne({
+      participants: { $all: [req.user.userId, participantId] }
+    });
+
+    if (existingConversation) {
+      return res.json(existingConversation);
+    }
+
+    const conversation = new Conversation({
+      participants: [req.user.userId, participantId]
+    });
+
+    await conversation.save();
+    res.status(201).json(conversation);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+// Get messages for a conversation
+router.get('/conversations/:conversationId/messages', authMiddleware, async (req, res) => {
+  try {
+    const messages = await Message.find({
+      conversationId: req.params.conversationId
+    })
+    .sort({ timestamp: 1 });
+    res.json(messages);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Send a message
+router.post('/conversations/:conversationId/messages', authMiddleware, async (req, res) => {
+  console.log("Sending message");
+  try {
+    const { content } = req.body;
+    const conversationId = req.params.conversationId;
+
+    console.log(content);
+    console.log(conversationId);
+    console.log(req.user);
+    const message = new Message({
+      conversationId,
+      sender: req.user.userId,
+      content
+    });
+
+    await message.save();
+
+    // Update conversation's lastMessage and updatedAt
+    await Conversation.findByIdAndUpdate(conversationId, {
+      lastMessage: message._id,
+      updatedAt: new Date()
+    });
+
+    res.status(201).json(message);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+// Mark messages as seen
+router.put('/conversations/:conversationId/seen', authMiddleware, async (req, res) => {
+  try {
+    await Message.updateMany(
+      {
+        conversationId: req.params.conversationId,
+        sender: { $ne: req.user._id }
+      },
+      { seen: true }
+    );
+    res.json({ message: 'Messages marked as seen' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 
 
 module.exports = router;
