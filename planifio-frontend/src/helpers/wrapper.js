@@ -10,7 +10,26 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
   const [assignments, setAssignments] = useState([]);
+  const [projects, setProjects] = useState([]);
+  const [organizationMembers, setOrganizationMembers] = useState([]);
 
+  function setStates(data) {
+    setUser(data.user);
+    setIsAuthenticated(true);
+    setAssignments(data.assignments);
+    setProjects(data.projects);
+    setOrganizationMembers(data.organizationMembers);
+    console.log(data);
+  }
+
+  function _clearStates() {
+    setUser(null);
+    setIsAuthenticated(false);
+    setAssignments([]);
+    setProjects([]);
+    setOrganizationMembers([]);
+  }
+  
   // Login function
   const login = async (email, password) => {
     try {
@@ -18,12 +37,7 @@ export const AuthProvider = ({ children }) => {
       
       // Store token in localStorage
       localStorage.setItem('token', response.data.token);
-      
-      // Set user and authentication state
-      setUser(response.data.user);
-      setIsAuthenticated(true);
-      setAssignments(response.data.assignments);
-
+      setStates(response.data);
       return response.data;
     } catch (error) {
       console.error('Login failed', error);
@@ -34,9 +48,7 @@ export const AuthProvider = ({ children }) => {
   // Logout function
   const logout = () => {
     localStorage.removeItem('token');
-    setUser(null);
-    setIsAuthenticated(false);
-    setAssignments([]);
+    _clearStates();
   };
 
   // Check authentication on app load
@@ -51,12 +63,10 @@ export const AuthProvider = ({ children }) => {
             headers: { Authorization: `Bearer ${token}` }
           });
           
-          setUser(response.data.user);
-          setIsAuthenticated(true);
-          setAssignments(response.data.assignments);
+          setStates(response.data);
         } catch (error) {
           // Token is invalid or expired
-          //logout();
+          logout();
         }
       }
       setLoading(false);
@@ -76,7 +86,7 @@ export const AuthProvider = ({ children }) => {
         return config;
       },
       error => {
-        return Promise.reject(error);
+        return Promise.reject(Error(error));
       }
     );
 
@@ -104,8 +114,12 @@ export const AuthProvider = ({ children }) => {
       isAuthenticated,
       login,
       logout,
+      organizationMembers,
+      setOrganizationMembers,
       assignments,
       setAssignments,
+      projects,
+      setProjects,
       ProtectedRoute,
       loading
     }}>

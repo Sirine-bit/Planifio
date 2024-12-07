@@ -10,13 +10,13 @@ import MainMenu from './pages/MainMenu';
 // import Hey from './pages/Hey'; 
 // import Activity from './pages/Activity'; 
 import HolidaysRequestAndAbsences from './pages/HolidaysRequestAndAbsences'; 
-import MakeProject from './pages/MakeProject';
 import InvitePeople from './pages/InvitePeople';
 import DashboardPage from './pages/DashboardPage';
 import './App.css';
 import { AuthProvider, useAuth } from './helpers/wrapper';
 import Modal from 'react-modal';
 import LoadingScreen from './components/LoadingScreen';
+import RoboticsLearning from './components/robotics';
 
 Modal.setAppElement('#root');
 // Wrap protected routes
@@ -26,8 +26,6 @@ const ProtectedRoute = ({ children }) => {
   if (loading) {
     return <LoadingScreen />; // Or a spinner
   }
-
-  console.log(isAuthenticated);
 
   return isAuthenticated ? (
     children
@@ -45,6 +43,7 @@ const App = () => {
           <Route path="/" element={<HomePage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/robotics" element={<RoboticsLearning />} />
           {/* Protected Routes - Nested under MainMenu */}
           <Route 
             path="/mainmenu" 
@@ -64,7 +63,6 @@ const App = () => {
               path="holidaysrequestandabsences" 
               element={<HolidaysRequestAndAbsences />} 
             />
-            <Route path="makeProject" element={<MakeProject />} />
             <Route path="invitePeople" element={<InvitePeople />} />
             <Route path="dashboard" element={<DashboardPage />} />
           </Route>

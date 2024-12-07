@@ -1,11 +1,33 @@
-
 const express = require('express');
 const User = require('../models/User');
+const Project = require('../models/Project');
 const Assignment = require('../models/Assignment');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
 const authMiddleware = require('../helpers/authMiddleWare')
+
+async function userData(user) {
+  const organizationMembers = await User.find(
+    { organization: user.organization, _id: { $ne: user._id } }, // Exclude current user
+    { password: 0 } // Exclude password field
+  );
+  const projects = await Project.find({ teamMembers: user._id });
+  const assignments = await Assignment.find({ userID: user._id });
+
+  return {
+    user: {
+      id: user._id,
+      username: user.username,
+      email: user.email,
+      organization: user.organization,
+      profileImage: user.profileImage? user.profileImage : null
+    },
+    organizationMembers,
+    projects,
+    assignments
+  };
+}
 
 // Route d'inscription
 router.post('/signup', async (req, res) => {
@@ -44,51 +66,30 @@ router.post('/login', async (req, res) => {
 
   try {
     // Vérifiez si l'utilisateur existe
-    console.log("stage 0");
-
     const user = await User.findOne({ email });
-    console.log(user);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Comparez le mot de passe fourni avec celui stocké
-    console.log(password)
     const isCorrect = await bcrypt.compare(password, user.password);
     if (!isCorrect) {
       return res.status(400).json({ message: 'Incorrect password' });
     }
 
-    // Generate a JWT token
-    console.log("stage 1");
     const token = jwt.sign(
       { 
         userId: user._id, 
         email: user.email 
       }, 
       process.env.JWT_SECRET,
-      { expiresIn: '1h' }
+      { expiresIn: '5h' }
     );
 
-    console.log("stage 2");
-
-    // Fetch user-specific assignments
-    const assignments = await Assignment.find({ userID: user._id });
-
-    console.log("stage 3");
-
-    // Réponse en cas de succès
-    res.status(200).json({ 
+    let json = await userData(user);
+    res.status(200).json({
       message: 'Login successful', 
       token,
-      user: {
-        id: user._id,
-        username: user.username,
-        email: user.email,
-        organization: user.organization,
-        profileImage: user.profileImage? user.profileImage : null
-      },
-      assignments 
+      ...json
     });
   } catch (error) {
     console.error('Error during login:', error);
@@ -99,22 +100,9 @@ router.post('/login', async (req, res) => {
 // In your backend routes
 router.get('/verify', authMiddleware, async (req, res) => {
   try {
-    // Find the user, excluding the password
     const user = await User.findById(req.user.userId).select('-password');
-    
-    // Fetch user assignments
-    const assignments = await Assignment.find({ userID: req.user.userId });
-
-    res.json({ 
-      user: {
-        id: user._id,
-        username: user.username,
-        email: user.email,
-        organization: user.organization,
-        profileImage: user.profileImage? user.profileImage : null
-      },
-      assignments
-    });
+    const json = await userData(user);
+    res.json({ ...json });
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
@@ -181,6 +169,25 @@ router.put('/assignments/:id', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Failed to update assignment' });
+  }
+});
+
+router.post('/projects', async (req, res) => {
+  try {
+    const project = new Project(req.body);
+    await project.save();
+    res.status(201).json(project);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+router.get('/projects', async (req, res) => {
+  try {
+    const projects = await Project.find().populate('teamMembers');
+    res.json(projects);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });
 

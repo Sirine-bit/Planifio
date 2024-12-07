@@ -9,6 +9,7 @@ import { useAuth } from '../helpers/wrapper';
 import LoadingScreen from "../components/LoadingScreen";
 import AssignmentList from "../components/myAssignments";
 import { Avatar } from "../components/avatar";
+import ProjectModal from "../components/ProjectModal";
 
 const MainMenu = () => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
@@ -23,6 +24,7 @@ const MainMenu = () => {
 
 
   const [isAddAssignmentModalOpen, setIsAddAssignmentModalOpen] = useState(false);
+  const [isAddProjectOpen, setIsAddProjectOpen] = useState(false);
 
   const openAddAssignmentModal = () => setIsAddAssignmentModalOpen(true);
   const closeAddAssignmentModal = () => setIsAddAssignmentModalOpen(false);
@@ -90,15 +92,10 @@ const MainMenu = () => {
   };
 
   const days = getDaysInMonth(currentDate);
-  const handleMakeProject = () => {
-    navigate('/makeProject');
-  };
 
   const handleInvitePeople = () => {
     navigate('/invitePeople');
   };
-
-  console.log(user);
 
   if(isLoading) {
     return <LoadingScreen />;
@@ -114,7 +111,7 @@ const MainMenu = () => {
         <nav className="navbar">
           <ul className="nav-links">
             <li>
-              <a href="/home"><FaHome /> Home</a>
+              <a href="/" className="cursor-pointer"><FaHome /> Home</a>
             </li>
             <li>
               <a href="/lineup"><FaCalendar /> LineUp</a>
@@ -129,14 +126,17 @@ const MainMenu = () => {
               <a href="/activity"><FaChartLine /> Activity</a>
             </li>
             <li ref={myStaffRef}>
-              <a onClick={toggleMyStaffMenu} className="cursor-pointer"><FaChartPie /> My staff</a>
+              <button onClick={toggleMyStaffMenu} className="cursor-pointer flex items-center justify-center space-x-3">
+                <FaChartPie />
+                <div>My staff</div>
+              </button>
               {showMyStaffMenu && (
                 <ul className="profile-menu">
                   <li className="cursor-pointer">
-                    <a onClick={openAddAssignmentModal} >
+                    <button onClick={openAddAssignmentModal} className="flex items-center justify-center space-x-3" >
                       <FaSquarePlus/>
-                      Add Assignment
-                    </a>
+                      <div>Add Assignment</div>
+                    </button>
                   </li>
                   <li className="cursor-pointer">
                     <Link to="myschedule">
@@ -183,8 +183,9 @@ const MainMenu = () => {
       </div>
 
       <div className="action-buttons">
-        <button className="make-project-btn" onClick={handleMakeProject}>
-          Make new project
+        <ProjectModal isOpen={isAddProjectOpen} onClose={() => setIsAddProjectOpen(false)} />
+        <button className="make-project-btn" onClick={() => setIsAddProjectOpen(true)}>
+          Create Project
         </button>
         <button className="invite-people-btn" onClick={handleInvitePeople}>
           Invite people
