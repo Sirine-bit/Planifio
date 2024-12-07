@@ -7,11 +7,12 @@ export const Avatar = ({ imageUrl, size = "md", className = "" }) => {
       sm: "w-8 h-8 min-w-[2rem] min-h-[2rem]",
       md: "w-12 h-12 min-w-[3rem] min-h-[3rem]",
       lg: "w-16 h-16 min-w-[4rem] min-h-[4rem]",
+      xlg: "w-24 h-24 min-w-[5rem] min-h-[5rem]",
     };
     
     Avatar.propTypes = {
       imageUrl: PropTypes.string,
-      size: PropTypes.oneOf(["sm", "md", "lg", "xl"]),
+      size: PropTypes.oneOf(["sm", "md", "lg", "xl", "xlg"]),
       className: PropTypes.string
     };
 

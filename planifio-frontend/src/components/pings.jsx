@@ -17,7 +17,7 @@ const ChatModal = ({ isOpen, onClose }) => {
 
   useEffect(() => {
     if (isOpen) {
-      fetchConversations();
+      fetchConversations(true);
     }
   }, [isOpen]);
 
@@ -29,18 +29,25 @@ const ChatModal = ({ isOpen, onClose }) => {
     scrollToBottom();
   }, [messages]);
 
-  const fetchConversations = async () => {
+  const fetchConversations = async (firstTime = false) => {
     try {
       const response = await axiosInstance.get('/api/conversations');
       setConversations(response.data);
       console.log(response.data);
       const members = organizationMembers
                       .filter(member => !response.data
-                          .some(conversation => 
-                            conversation.participants[0]._id === member._id));
+                        .some(conversation => 
+                          conversation.participants.some(participant => 
+                            participant._id === member._id
+                          )
+                        )
+                      );
 
       console.log(members);
       setMembers(members);
+      if (firstTime) {
+        await selectConversation(response.data[0]);
+      }
     } catch (error) {
       console.error('Error fetching conversations:', error);
     }
@@ -84,16 +91,16 @@ const ChatModal = ({ isOpen, onClose }) => {
   };
 
   const selectConversation = async (conversation) => {
-    setSelectedConversation(conversation);
     await fetchMessages(conversation._id);
+    setSelectedConversation(conversation);
   };
 
   return (
     <div className={`fixed bottom-0 right-4 z-50 ${isOpen ? 'block' : 'hidden'}`}>
-      <div className="bg-white rounded-t-lg shadow-lg w-128 h-[600px] flex flex-col">
+      <div className="bg-white rounded-t-lg shadow-lg w-[600px] h-[600px] flex flex-col">
         {/* Header */}
-        <div className="p-4 border-b flex justify-between items-center bg-blue-600 text-white rounded-t-lg">
-          <h2 className="text-lg font-semibold">Messages</h2>
+        <div className="p-1 border-b flex justify-between items-center bg-blue-600 text-white rounded-t-lg">
+          <h2 className="text-lg font-semibold w-full text-[aliceBlue]">Pings</h2>
           <button onClick={onClose} className="hover:bg-blue-700 p-1 rounded">
             <X className="w-5 h-5" />
           </button>
@@ -107,24 +114,28 @@ const ChatModal = ({ isOpen, onClose }) => {
                 key={conversation._id}
                 onClick={() => selectConversation(conversation)}
                 className={`p-3 hover:bg-gray-100 cursor-pointer ${
-                  selectedConversation?._id === conversation._id ? 'bg-gray-100' : ''
+                  selectedConversation?._id === conversation._id ? 'bg-gray-300' : ''
                 }`}
               >
                 <div className="flex items-center space-x-2">
                   <Avatar
-                    imageUrl={conversation.participants[0]?.profileImage}
+                    imageUrl={conversation.participants.find(
+                      participant => participant._id !== user.id
+                    )?.profileImage ?? '../../public/assets/profile.png'}
                     size="sm"
-                    className="flex-shrink-0"
+                    className='flex-shrink-0'
                   />
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium truncate">
-                      {conversation.participants[0]?.name}
+                      {conversation.participants.find(
+                      participant => participant._id !== user.id
+                    ).username}
                     </p>
                     <p className="text-xs text-gray-500 truncate">
-                      {conversation.lastMessage?.content}
+                      {conversation.lastMessage ? conversation.lastMessage?.content : 'Start a conversation'}
                     </p>
                   </div>
-                  {!conversation.lastMessage?.seen && (
+                  {!conversation.lastMessage?.seen && (conversation.lastMessage?.sender._id == user.id) && (
                     <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
                   )}
                 </div>
@@ -134,15 +145,13 @@ const ChatModal = ({ isOpen, onClose }) => {
             <div
               key={member._id}
               onClick={() => createConversation(member._id)}
-              className={`p-3 hover:bg-gray-100 cursor-pointer ${
-                selectedConversation?._id === member._id ? 'bg-gray-100' : ''
-              }`}
+              className={'p-3 hover:bg-gray-100 cursor-pointer'}
             >
               <div className="flex items-center space-x-2">
                 <Avatar
                   imageUrl={member.profileImage ?? '../../public/assets/profile.png'}
                   size="sm"
-                  className="flex-shrink-0"
+                  className='flex-shrink-0'
                 />
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium truncate">
@@ -162,57 +171,69 @@ const ChatModal = ({ isOpen, onClose }) => {
             {selectedConversation ? (
               <>
                 {/* Chat Header */}
-                <div className="p-3 border-b">
-                  <div className="flex items-center space-x-2">
+                <div className='flex flex-col overflow-y-auto h-[500px]'>
+                  <div className="p-3 border-b">
+                    <div className="w-full flex items-center justify-center flex-col space-x-2">
                     <Avatar
-                      imageUrl={selectedConversation.participants[0]?.profileImage}
-                      size="sm"
-                    />
-                    <span className="font-medium">
-                      {selectedConversation.participants[0]?.name}
-                    </span>
+                        imageUrl={selectedConversation.participants.find(
+                          participant => participant._id !== user.id
+                        )?.profileImage}
+                        size="xlg"
+                      />
+                      <span className="font-bold">
+                        {selectedConversation.participants?.find(
+                          participant => participant._id !== user.id
+                        )?.username}
+                      </span>
+                    </div>
                   </div>
-                </div>
 
-                {/* Messages */}
-                <div className="flex-1 overflow-y-auto p-4">
-                  {messages.map((message) => (
-                    <div
-                      key={message._id}
-                      className={`flex mb-3 ${
-                        message.sender === user.id ? 'justify-end' : 'justify-start'
-                      }`}
-                    >
+                  {/* Messages */}
+                  <div className="flex-1 p-2">
+                    {messages.length === 0 && (
+                      <div className="flex items-center justify-center h-full text-gray-500">
+                        No messages yet
+                        </div>
+                        )}
+                    {messages.map((message) => (
                       <div
-                        className={`max-w-xs px-4 py-2 rounded-lg ${
-                          message.sender === user.id
-                            ? 'bg-blue-600 text-white'
-                            : 'bg-gray-100'
+                        key={message._id}
+                        className={`flex mb-3 ${
+                          message.sender === user.id ? 'justify-end' : 'justify-start'
                         }`}
                       >
-                        <p className="text-sm">{message.content}</p>
-                        <div className="flex items-center justify-end space-x-1 mt-1">
-                          <span className="text-xs opacity-75">
-                            {new Date(message.timestamp).toLocaleTimeString()}
-                          </span>
-                          {message.sender === user.id && (
-                            <span>
-                              {message.seen ? (
-                                <CheckCheck className="w-4 h-4" />
-                              ) : (
-                                <Check className="w-4 h-4" />
-                              )}
+                        <div
+                          className={`max-w-xs px-4 py-2 rounded-lg ${
+                            message.sender === user.id
+                              ? 'bg-blue-600 text-white'
+                              : 'bg-gray-100'
+                          }`}
+                        >
+                          <p className="text-sm max-w-[200px]">{message.content}</p>
+                          <div className="flex items-center justify-end space-x-1 mt-1">
+                            <span className="text-xs opacity-75">
+                              {new Date(message.timestamp).toLocaleTimeString()}
                             </span>
-                          )}
+                            {message.sender === user.id && (
+                              <span>
+                                {message.seen ? (
+                                  <CheckCheck className="w-4 h-4" />
+                                ) : (
+                                  <Check className="w-4 h-4" />
+                                )}
+                              </span>
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
-                  <div ref={messagesEndRef} />
+                    ))}
+                    <div ref={messagesEndRef} />
+                  </div>
+
                 </div>
 
                 {/* Message Input */}
-                <form onSubmit={handleSendMessage} className="p-3 border-t">
+                <form onSubmit={handleSendMessage} className="p-2 border-t pb-1">
                   <div className="flex items-center space-x-2">
                     <input
                       type="text"
