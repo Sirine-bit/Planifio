@@ -4,7 +4,6 @@ import Modal from 'react-modal';
 import DatePicker from 'react-datepicker';
 import { CSSTransition } from 'react-transition-group';
 import { useAuth } from '../helpers/wrapper';
-import './ProjectModal.css'; // Import CSS for transitions
 
 const ProjectModal = ({ isOpen, onClose }) => {
   const [formData, setFormData] = useState({
@@ -43,19 +42,24 @@ const ProjectModal = ({ isOpen, onClose }) => {
     <CSSTransition
       in={isOpen}
       timeout={300}
-      classNames="modal"
+      classNames={{
+        enter: 'opacity-0 scale-90',
+        enterActive: 'opacity-100 scale-100 transition-opacity transition-transform duration-300',
+        exit: 'opacity-100 scale-100',
+        exitActive: 'opacity-0 scale-90 transition-opacity transition-transform duration-300',
+      }}
       unmountOnExit
     >
       <Modal
         isOpen={isOpen}
         onRequestClose={onClose}
-        className="max-w-2xl mx-auto mt-20 bg-white p-6 rounded-lg shadow-xl"
-        overlayClassName="fixed inset-0 bg-black bg-opacity-50"
+        className="max-w-2xl mx-auto mt-20 bg-white p-6 rounded-lg shadow-xl relative"
+        overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
       >
         <h2 className="text-2xl font-bold mb-4">New Project</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block mb-1" htmlFor="Project Name">
+            <label className="block mb-1 font-medium" htmlFor="Project Name">
               Project Name
             </label>
             <input
@@ -64,12 +68,12 @@ const ProjectModal = ({ isOpen, onClose }) => {
               onChange={(e) =>
                 setFormData({ ...formData, name: e.target.value })
               }
-              className="w-full border rounded p-2"
+              className="w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
           <div>
-            <label className="block mb-1" htmlFor="Description">
+            <label className="block mb-1 font-medium" htmlFor="Description">
               Description
             </label>
             <textarea
@@ -77,12 +81,12 @@ const ProjectModal = ({ isOpen, onClose }) => {
               onChange={(e) =>
                 setFormData({ ...formData, description: e.target.value })
               }
-              className="w-full border rounded p-2"
+              className="w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
           <div>
-            <label className="block mb-1" htmlFor="Team Members">
+            <label className="block mb-1 font-medium" htmlFor="Team Members">
               Team Members
             </label>
             <select
@@ -97,7 +101,7 @@ const ProjectModal = ({ isOpen, onClose }) => {
                   ),
                 })
               }
-              className="w-full border rounded p-2"
+              className="w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               {organizationMembers.map((user) => (
                 <option key={user._id} value={user._id}>
@@ -109,7 +113,7 @@ const ProjectModal = ({ isOpen, onClose }) => {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block mb-1" htmlFor="Start Date">
+              <label className="block mb-1 font-medium" htmlFor="Start Date">
                 Start Date
               </label>
               <DatePicker
@@ -117,11 +121,11 @@ const ProjectModal = ({ isOpen, onClose }) => {
                 onChange={(date) =>
                   setFormData({ ...formData, startDate: date })
                 }
-                className="w-full border rounded p-2"
+                className="w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             <div>
-              <label className="block mb-1" htmlFor="End Date">
+              <label className="block mb-1 font-medium" htmlFor="End Date">
                 End Date
               </label>
               <DatePicker
@@ -129,7 +133,7 @@ const ProjectModal = ({ isOpen, onClose }) => {
                 onChange={(date) =>
                   setFormData({ ...formData, endDate: date })
                 }
-                className="w-full border rounded p-2"
+                className="w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
           </div>
@@ -141,13 +145,13 @@ const ProjectModal = ({ isOpen, onClose }) => {
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 border rounded"
+              className="px-4 py-2 border rounded hover:bg-gray-200 transition"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-500 text-white rounded"
+              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
             >
               Create Project
             </button>

@@ -21,7 +21,7 @@ const HomePage = () => {
           <button onClick={handleGetStarted} className="cta-button">Get Started</button>
         </div>
         <div className="hero-image">
-          <img src={`${process.env.PUBLIC_URL}/assets/team-image.jpg`} alt="Team Collaboration" />
+          <img src={`/assets/team-image.jpg`} alt="Team Collaboration" />
         </div>
       </main>
     </div>

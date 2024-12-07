@@ -1,22 +1,22 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-import HomePage from './pages/HomePage';
-import SignupPage from './pages/SignupPage';
-import LoginPage from './pages/LoginPage';
-import MainMenu from './pages/MainMenu'; 
-// import LineUP from './pages/LineUP'; 
-// import Pings from './pages/Pings'; 
-// import MySchedule from './pages/MySchedule';
-// import Hey from './pages/Hey'; 
-// import Activity from './pages/Activity'; 
-import HolidaysRequestAndAbsences from './pages/HolidaysRequestAndAbsences'; 
-import InvitePeople from './pages/InvitePeople';
-import DashboardPage from './pages/DashboardPage';
+import HomePage from './pages/HomePage.jsx';
+import SignupPage from './pages/SignupPage.jsx';
+import LoginPage from './pages/LoginPage.jsx';
+import MainMenu from './pages/MainMenu.jsx'; 
+// import LineUP from './pages/LineUP.jsx'; 
+// import Pings from './pages/Pings.jsx'; 
+// import MySchedule from './pages/MySchedule.jsx';
+// import Hey from './pages/Hey.jsx'; 
+// import Activity from './pages/Activity.jsx'; 
+import HolidaysRequestAndAbsences from './pages/HolidaysRequestAndAbsences.jsx'; 
+import InvitePeople from './pages/InvitePeople.jsx';
+import DashboardPage from './pages/DashboardPage.jsx';
 import './App.css';
-import { AuthProvider, useAuth } from './helpers/wrapper';
+import { AuthProvider, useAuth } from './helpers/wrapper.jsx';
 import Modal from 'react-modal';
-import LoadingScreen from './components/LoadingScreen';
-import RoboticsLearning from './components/robotics';
+import LoadingScreen from './components/LoadingScreen.jsx';
+// import RoboticsLearning from './components/robotics';
 
 Modal.setAppElement('#root');
 // Wrap protected routes
@@ -43,7 +43,7 @@ const App = () => {
           <Route path="/" element={<HomePage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/robotics" element={<RoboticsLearning />} />
+          {/* <Route path="/robotics" element={<RoboticsLearning />} /> */}
           {/* Protected Routes - Nested under MainMenu */}
           <Route 
             path="/mainmenu" 

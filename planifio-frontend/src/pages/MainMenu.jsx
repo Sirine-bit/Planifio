@@ -6,10 +6,10 @@ import { useNavigate, Link, Outlet } from 'react-router-dom';
 import Modal from 'react-modal';
 import CreateAssignment from '../components/CreateAssignmentDialog';
 import { useAuth } from '../helpers/wrapper';
-import LoadingScreen from "../components/LoadingScreen";
-import AssignmentList from "../components/myAssignments";
-import { Avatar } from "../components/avatar";
-import ProjectModal from "../components/ProjectModal";
+import LoadingScreen from "../components/LoadingScreen.jsx";
+import AssignmentList from "../components/myAssignments.jsx";
+import { Avatar } from "./avatar.jsx";
+import ProjectModal from "../components/ProjectModal.jsx";
 
 const MainMenu = () => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
