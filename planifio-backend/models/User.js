@@ -7,7 +7,8 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   organization: { type: String, required: true },
   password: { type: String, required: true },
-  profileImage: { type: String, required: false, default: ''}
+  profileImage: { type: String, required: false, default: ''},
+  role: { type: String, required: false, default: 'user' }
 });
 
 userSchema.pre('save', async function (next) {
@@ -23,7 +24,7 @@ userSchema.methods.comparePassword = async function (password) {
 userSchema.methods.generateAuthToken = function () {
   const token = jwt.sign(
     { _id: this._id, username: this.username, email: this.email },
-    'votre_secret_jwt',
+    process.env.JWT_SECRET,
     { expiresIn: '1h' }
   );
   return token;

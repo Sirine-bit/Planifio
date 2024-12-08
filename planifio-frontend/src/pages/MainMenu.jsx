@@ -11,11 +11,18 @@ import AssignmentList from "../components/myAssignments.jsx";
 import { Avatar } from "../components/avatar.jsx";
 import ProjectModal from "../components/ProjectModal.jsx";
 import ChatModal from "../components/pings.jsx";
+import NotificationDropdown from "../components/Notifications.jsx";
+import InviteDialog from "../components/inviteCoworker.jsx";
+import ProfileDropdown from "../components/ProfileView..jsx";
 
 const MainMenu = () => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showMyStaffMenu, setShowMyStaffMenu] = useState(false);
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isInviteDialogOpen, setIsInviteDialogOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+
 
   const [currentDate, setCurrentDate] = useState(new Date());
   const [highlightedDates] = useState([5, 16, 25, 27]);
@@ -24,6 +31,8 @@ const MainMenu = () => {
   // Create refs for the menu containers
   const profileRef = useRef(null);
   const myStaffRef = useRef(null);
+  const notificationButtonRef = useRef(null);
+  const profileButtonRef = useRef(null);
 
 
   const [isAddAssignmentModalOpen, setIsAddAssignmentModalOpen] = useState(false);
@@ -97,7 +106,7 @@ const MainMenu = () => {
   const days = getDaysInMonth(currentDate);
 
   const handleInvitePeople = () => {
-    navigate('/invitePeople');
+    setIsInviteDialogOpen(true);
   };
 
   if(isLoading) {
@@ -126,7 +135,19 @@ const MainMenu = () => {
               <ChatModal isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
             </li>
             <li>
-              <a href="/hey"><FaBell /> Hey!</a>
+              <button 
+                ref={notificationButtonRef}
+                data-notification-trigger="true"
+                onClick={() => setIsNotificationOpen(!isNotificationOpen)} 
+                className="aligned-button"
+              >
+                <FaBell /> Hey!
+              </button>
+              <NotificationDropdown 
+                isOpen={isNotificationOpen} 
+                onClose={() => setIsNotificationOpen(false)}
+                anchor={notificationButtonRef}
+              />
             </li>
             <li>
               <a href="/activity"><FaChartLine /> Activity</a>
@@ -160,27 +181,19 @@ const MainMenu = () => {
             </li>
           </ul>
         </nav>
-        <div className="profile-section" ref={profileRef}>
-          <button onClick={toggleProfileMenu}>
+        <div className="profile-section" ref={profileButtonRef}>
+          <button onClick={() => setIsProfileOpen(!isProfileOpen)}>
             <Avatar 
-              imageUrl={user?.profileImage} 
+              imageUrl={user?.profileImage || "../assets/avatar.png"} 
               size="md"
               className="cursor-pointer hover:opacity-80"
             />
           </button>
-          {showProfileMenu && (
-            <ul className="profile-menu">
-              <li>
-                <a href="/profile"><FaUser/> View Profile</a>
-              </li>
-              <li>
-                <a href="/settings"><FaGear/> Settings</a>
-              </li>
-              <li className="aligned-button">
-                <FaRightFromBracket/><button onClick={logout}>Log Out</button>
-              </li>
-            </ul>
-          )}
+          <ProfileDropdown 
+              isOpen={isProfileOpen}
+              onClose={() => setIsProfileOpen(false)}
+              anchor={profileButtonRef}
+          />
         </div>
       </header>
 
@@ -196,6 +209,10 @@ const MainMenu = () => {
         <button className="invite-people-btn" onClick={handleInvitePeople}>
           Invite people
         </button>
+        <InviteDialog 
+          isOpen={isInviteDialogOpen} 
+          onClose={() => setIsInviteDialogOpen(false)} 
+        />
       </div>
 
       <div className="main-content">

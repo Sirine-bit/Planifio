@@ -8,6 +8,8 @@ const router = express.Router();
 const authMiddleware = require('../helpers/authMiddleWare')
 const Message = require('../models/Message');
 const Conversation = require('../models/Conversation');
+const Notification = require('../models/Notification');
+const { sendInvitationEmail } = require('../helpers/mail');
 
 async function userData(user) {
   const organizationMembers = await User.find(
@@ -67,7 +69,6 @@ router.post('/signup', async (req, res) => {
   }
 });
 
-// Route de connexion
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
@@ -77,10 +78,10 @@ router.post('/login', async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // const isCorrect = await bcrypt.compare(password, user.password);
-    // if (!isCorrect) {
-    //   return res.status(400).json({ message: 'Incorrect password' });
-    // }
+    const isCorrect = await bcrypt.compare(password, user.password);
+    if (!isCorrect) {
+      return res.status(400).json({ message: 'Incorrect password' });
+    }
 
     const token = jwt.sign(
       { 
@@ -114,7 +115,6 @@ router.get('/verify', authMiddleware, async (req, res) => {
   }
 });
 
-// Route pour obtenir la liste des utilisateurs
 router.get('/users', async (req, res) => {
   try {
     const users = await User.find();
@@ -295,6 +295,99 @@ router.put('/conversations/:conversationId/seen', authMiddleware, async (req, re
     res.json({ message: 'Messages marked as seen' });
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+});
+
+router.get('/notifications', authMiddleware, async (req, res) => {
+  try {
+    const notifications = await Notification.find({ recipient: req.user.userId })
+      .populate('instigator', 'username profileImage')
+      .sort({ createdAt: -1 })
+      .limit(50);
+    res.json(notifications);
+  } catch (error) {
+    res.status(501).json({ message: error.message });
+  }
+});
+
+// Mark notification as clicked
+router.put('/notifications/:notificationId/click', authMiddleware, async (req, res) => {
+  try {
+    const notification = await Notification.findOneAndUpdate(
+      { _id: req.params.notificationId, recipient: req.user.userId },
+      { isClicked: true },
+      { new: true }
+    );
+    
+    if (!notification) {
+      return res.status(404).json({ message: 'Notification not found' });
+    }
+    
+    res.json(notification);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Create a new notification (admin or system route)
+router.post('/notifications', authMiddleware, async (req, res) => {
+  try {
+    const { recipientId, content, severity, instigatorId } = req.body;
+    
+    const notification = new Notification({
+      recipient: recipientId,
+      content,
+      severity,
+      instigator: instigatorId || null,
+      instigatorImage: req.body.instigatorImage
+    });
+    
+    await notification.save();
+    res.status(201).json(notification);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+router.post('/users/invite', authMiddleware, async (req, res) => {
+  try {
+    const { senderFullName, fullName, email, password, organization } = req.body;
+
+    const existingUser = await User.findOne({ email: email.toLowerCase() });
+    if (existingUser) {
+      return res.status(400).json({ message: 'User with this email already exists' });
+    }
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create new user
+    console.log(req.user);
+    const newUser = new User({
+      username: fullName,
+      email: email.toLowerCase(),
+      password: hashedPassword,
+      organization: organization,
+      role: 'user'
+    });
+
+    await newUser.save();
+
+    try {
+      await sendInvitationEmail(email, fullName, password, senderFullName, organization);
+    } catch (emailError) {
+      // If email fails, we still want to create the user but should log the error
+      console.error('Failed to send invitation email:', emailError);
+      return res.status(201).json({ 
+        message: 'User created successfully but failed to send email notification',
+        user: newUser
+      });
+    }
+
+    res.status(201).json({ message: 'User invited successfully' });
+  } catch (error) {
+    console.error('Error inviting user:', error);
+    res.status(500).json({ message: 'Failed to invite user' });
   }
 });
 

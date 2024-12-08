@@ -84,7 +84,16 @@ const ChatModal = ({ isOpen, onClose }) => {
       });
       setMessages([...messages, response.data]);
       setNewMessage('');
-      fetchConversations(); // Refresh conversation list to update last message
+      fetchConversations();
+      axiosInstance.post('/api/notifications', {
+        recipientId: selectedConversation.participants.find(
+          participant => participant._id !== user.id
+        )._id,
+        content: user.username + ' sent you a message',
+        severity: 'low',
+        instigatorId: user.id,
+        instigatorImage: user.profileImage
+      });
     } catch (error) {
       console.error('Error sending message:', error);
     }

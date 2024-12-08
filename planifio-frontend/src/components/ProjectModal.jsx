@@ -29,6 +29,16 @@ const ProjectModal = ({ isOpen, onClose }) => {
 
       if (!(await response).status == 201) throw new Error('Failed to create project');
 
+      formData.teamMembers.forEach(async (memberId) => {
+        await axiosInstance.post('/api/notifications', {
+          recipientId: memberId,
+          content: user.username + ' added you to a new project: ' + formData.name,
+          severity: 'medium',
+          instigatorId: user.id,
+          instigatorImage: user.profileImage
+        });
+      });
+
       setSuccess(true);
       setTimeout(() => {
         setSuccess(false);

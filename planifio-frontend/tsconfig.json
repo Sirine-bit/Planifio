@@ -4,7 +4,11 @@
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
   ],
-  "compilerOptions": {                      /* Skip type checking .d.ts files that are included with TypeScript. */
+  "compilerOptions": {       
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },               /* Skip type checking .d.ts files that are included with TypeScript. */
     "target": "esnext",
     "module": "esnext",
     "jsx": "react-jsx",

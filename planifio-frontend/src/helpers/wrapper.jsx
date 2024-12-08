@@ -95,7 +95,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   // Create a protected route component
-  const ProtectedRoute = ({ children }) => {
+  const ProtectedRoute = ({ children, loading, isAuthenticated }) => {
     if (loading) {
       return <LoadingScreen />;
     }
@@ -121,10 +121,12 @@ export const AuthProvider = ({ children }) => {
       setAssignments,
       projects,
       setProjects,
-      ProtectedRoute,
       loading
     }}>
       {children}
+      <ProtectedRoute loading={loading} isAuthenticated={isAuthenticated}>
+        {children}
+      </ProtectedRoute>
     </AuthContext.Provider>
   );
 };
