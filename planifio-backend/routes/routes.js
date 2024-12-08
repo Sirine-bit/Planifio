@@ -198,8 +198,6 @@ router.get('/projects', async (req, res) => {
 });
 
 router.get('/conversations', authMiddleware, async (req, res) => {
-  console.log("Creating conversation");
-  console.log(req.body);  
   try {
     const conversations = await Conversation.find({
       participants: req.user.userId
@@ -254,14 +252,10 @@ router.get('/conversations/:conversationId/messages', authMiddleware, async (req
 
 // Send a message
 router.post('/conversations/:conversationId/messages', authMiddleware, async (req, res) => {
-  console.log("Sending message");
   try {
     const { content } = req.body;
     const conversationId = req.params.conversationId;
 
-    console.log(content);
-    console.log(conversationId);
-    console.log(req.user);
     const message = new Message({
       conversationId,
       sender: req.user.userId,
@@ -361,7 +355,7 @@ router.post('/users/invite', authMiddleware, async (req, res) => {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create new user
+    // Create new use r
     console.log(req.user);
     const newUser = new User({
       username: fullName,

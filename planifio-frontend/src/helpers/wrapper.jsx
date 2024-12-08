@@ -123,7 +123,6 @@ export const AuthProvider = ({ children }) => {
       setProjects,
       loading
     }}>
-      {children}
       <ProtectedRoute loading={loading} isAuthenticated={isAuthenticated}>
         {children}
       </ProtectedRoute>

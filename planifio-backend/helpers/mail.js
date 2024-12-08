@@ -103,8 +103,6 @@ The Planifio Team
       `
     });
 
-    console.log('Email sent successfully to:', recipientEmail);
-    console.log('Email response:', response);
     return response.success;
   } catch (error) {
     console.error('Error sending email:', error);

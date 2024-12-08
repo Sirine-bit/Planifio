@@ -49,7 +49,6 @@ const RequestHoliday = () => {
     }
 
     // Simulate API call
-    console.log('Submitting holiday request:', formData);
     setSuccess(true);
     
     // Reset form after successful submission

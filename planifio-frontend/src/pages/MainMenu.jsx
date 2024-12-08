@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./MainMenu.css";
-import { FaChartPie, FaGear, FaRightFromBracket, FaSquarePlus } from "react-icons/fa6";
-import { FaHome, FaCalendar, FaComments, FaBell, FaChartLine, FaChevronLeft, FaChevronRight, FaUser } from 'react-icons/fa';
-import { useNavigate, Link, Outlet } from 'react-router-dom';
+import { FaChartPie, FaSquarePlus } from "react-icons/fa6";
+import { FaHome, FaCalendar, FaComments, FaBell, FaChartLine, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 import Modal from 'react-modal';
 import CreateAssignment from '../components/CreateAssignmentDialog';
 import { useAuth } from '../helpers/wrapper';
@@ -16,7 +16,6 @@ import InviteDialog from "../components/inviteCoworker.jsx";
 import ProfileDropdown from "../components/ProfileView..jsx";
 
 const MainMenu = () => {
-  const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showMyStaffMenu, setShowMyStaffMenu] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -26,10 +25,9 @@ const MainMenu = () => {
 
   const [currentDate, setCurrentDate] = useState(new Date());
   const [highlightedDates] = useState([5, 16, 25, 27]);
-  const { user, assignments, setAssignments, isLoading, logout } = useAuth();
-  const navigate = useNavigate();
+  const { user, assignments, setAssignments, isLoading } = useAuth();
+  
   // Create refs for the menu containers
-  const profileRef = useRef(null);
   const myStaffRef = useRef(null);
   const notificationButtonRef = useRef(null);
   const profileButtonRef = useRef(null);
@@ -49,10 +47,6 @@ const MainMenu = () => {
   // Handle click outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      // Check for profile menu
-      if (profileRef.current && !profileRef.current.contains(event.target)) {
-        setShowProfileMenu(false);
-      }
       // Check for my staff menu
       if (myStaffRef.current && !myStaffRef.current.contains(event.target)) {
         setShowMyStaffMenu(false);
@@ -67,10 +61,6 @@ const MainMenu = () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
-
-  const toggleProfileMenu = () => {
-    setShowProfileMenu(!showProfileMenu);
-  };
 
   const toggleMyStaffMenu = () => {
     setShowMyStaffMenu(!showMyStaffMenu);
@@ -236,7 +226,7 @@ const MainMenu = () => {
             <div className="calendar-dates">
               {days.map((day, index) => (
                 <span
-                  key={index}
+                  key={`${currentDate.getMonth()}-${day}-${index}`}
                   className={`calendar-date ${highlightedDates.includes(day) ? 'highlighted' : ''} ${day === '' ? 'empty' : ''}`}
                 >
                   {day}
@@ -266,8 +256,6 @@ const MainMenu = () => {
         </button>
         <CreateAssignment onClose={closeAddAssignmentModal} />
       </Modal>
-      
-      <Outlet />
     </div>
     
   );

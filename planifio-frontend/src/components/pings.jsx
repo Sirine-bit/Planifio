@@ -33,7 +33,6 @@ const ChatModal = ({ isOpen, onClose }) => {
     try {
       const response = await axiosInstance.get('/api/conversations');
       setConversations(response.data);
-      console.log(response.data);
       const members = organizationMembers
                       .filter(member => !response.data
                         .some(conversation => 
@@ -43,7 +42,6 @@ const ChatModal = ({ isOpen, onClose }) => {
                         )
                       );
 
-      console.log(members);
       setMembers(members);
       if (firstTime) {
         await selectConversation(response.data[0]);
@@ -153,6 +151,7 @@ const ChatModal = ({ isOpen, onClose }) => {
             {members && members.map((member) => (
             <div
               key={member._id}
+              role='button'
               onClick={() => createConversation(member._id)}
               className={'p-3 hover:bg-gray-100 cursor-pointer'}
             >

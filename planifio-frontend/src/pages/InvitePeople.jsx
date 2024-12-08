@@ -44,11 +44,7 @@ const InvitePeople = () => {
       return;
     }
 
-    // Simuler un appel API
-    console.log('Submitting Email invitation:', formData);
     setSuccess(true);
-
-    // Réinitialiser le formulaire après un succès
     setTimeout(() => {
       setFormData({ fullname: '', email: '', job: '', company: '' });
       setSuccess(false);
