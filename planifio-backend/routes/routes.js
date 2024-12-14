@@ -2,6 +2,7 @@ const express = require('express');
 const User = require('../models/User');
 const Project = require('../models/Project');
 const Assignment = require('../models/Assignment');
+const Event = require('../models/Schedule');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
@@ -385,6 +386,68 @@ router.post('/users/invite', authMiddleware, async (req, res) => {
   }
 });
 
+router.post('/events', async (req, res) => {
+  try {
+    const event = new Event(req.body);
+    await event.save();
+    res.status(201).json(event);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+// Get all events for a user
+router.get('/events/:userId', async (req, res) => {
+  try {
+    const events = await Event.find({ userId: req.params.userId });
+    res.json(events);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Get events for a specific month
+router.get('/events/:userId/:year/:month', async (req, res) => {
+  try {
+    const startDate = new Date(req.params.year, req.params.month - 1, 1);
+    const endDate = new Date(req.params.year, req.params.month, 0);
+    
+    const events = await Event.find({
+      userId: req.params.userId,
+      date: {
+        $gte: startDate,
+        $lte: endDate
+      }
+    });
+    res.json(events);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Update event
+router.put('/events/:id', async (req, res) => {
+  try {
+    const event = await Event.findByIdAndUpdate(
+      req.params.id,
+      { ...req.body, updatedAt: Date.now() },
+      { new: true }
+    );
+    res.json(event);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+// Delete event
+router.delete('/events/:id', async (req, res) => {
+  try {
+    await Event.findByIdAndDelete(req.params.id);
+    res.status(204).send();
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
 
 
 module.exports = router;

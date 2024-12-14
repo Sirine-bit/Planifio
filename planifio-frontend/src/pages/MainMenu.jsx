@@ -14,6 +14,7 @@ import ChatModal from "../components/pings.jsx";
 import NotificationDropdown from "../components/Notifications.jsx";
 import InviteDialog from "../components/inviteCoworker.jsx";
 import ProfileDropdown from "../components/ProfileView..jsx";
+import Calendar from "../components/Calendar.jsx";
 
 const MainMenu = () => {
   const [showMyStaffMenu, setShowMyStaffMenu] = useState(false);
@@ -161,7 +162,7 @@ const MainMenu = () => {
                     My Schedule</Link>
                   </li>
                   <li className="cursor-pointer">
-                    <Link to="HolidaysRequest">
+                    <Link to="/RequestHoliday">
                       <FaCalendar/>
                       Holidays Request and Absences
                     </Link>
@@ -187,11 +188,11 @@ const MainMenu = () => {
         </div>
       </header>
 
-      <div className="company-name">
-        <h1>Company Name</h1>
+      <div className="company-name text-center mt-4 text-4xl">
+        <h1>{user.organization}</h1>
       </div>
 
-      <div className="action-buttons">
+      <div className="action-buttons">  
         <ProjectModal isOpen={isAddProjectOpen} onClose={() => setIsAddProjectOpen(false)} />
         <button className="make-project-btn" onClick={() => setIsAddProjectOpen(true)}>
           Create Project
@@ -206,9 +207,9 @@ const MainMenu = () => {
       </div>
 
       <div className="main-content">
-        <div className="schedule-section">
+        <div className="schedule-section w-[55%] ">
           <h2>Your schedule</h2>
-          <div className="calendar">
+          {/* <div className="calendar">
             <div className="calendar-header">
               <FaChevronLeft className="calendar-nav" onClick={previousMonth} />
               <span>{months[currentDate.getMonth()]} {currentDate.getFullYear()}</span>
@@ -233,10 +234,12 @@ const MainMenu = () => {
                 </span>
               ))}
             </div>
-          </div>
+          </div> */}
+          <Calendar />
+
         </div>
 
-        <div className="assignments-section">
+        <div className="assignments-section w-[35%] h-full">
           <h2>Your assignments</h2>
           <AssignmentList assignments={assignments} setAssignments={setAssignments} />
         </div>
@@ -256,7 +259,49 @@ const MainMenu = () => {
         </button>
         <CreateAssignment onClose={closeAddAssignmentModal} />
       </Modal>
+      <footer className="bg-gray-900 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div>
+              <h4 className="text-lg font-semibold mb-4">Product</h4>
+              <ul className="space-y-2">
+                <li><a href="#" className="text-gray-400 hover:text-white">Features</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white">Pricing</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white">Security</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-lg font-semibold mb-4">Company</h4>
+              <ul className="space-y-2">
+                <li><a href="#" className="text-gray-400 hover:text-white">About</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white">Careers</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white">Contact</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-lg font-semibold mb-4">Resources</h4>
+              <ul className="space-y-2">
+                <li><a href="#" className="text-gray-400 hover:text-white">Blog</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white">Documentation</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white">Help Center</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-lg font-semibold mb-4">Legal</h4>
+              <ul className="space-y-2">
+                <li><a href="#" className="text-gray-400 hover:text-white">Privacy</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white">Terms</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white">Cookie Policy</a></li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400">
+            <p>&copy; 2024 Planifio. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
     </div>
+    
     
   );
 };

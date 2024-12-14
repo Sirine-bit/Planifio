@@ -4,13 +4,11 @@ import HomePage from './pages/HomePage.jsx';
 import SignupPage from './pages/SignupPage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import MainMenu from './pages/MainMenu.jsx'; 
-import HolidaysRequestAndAbsences from './pages/HolidaysRequestAndAbsences.jsx'; 
-import InvitePeople from './pages/InvitePeople.jsx';
-import DashboardPage from './pages/DashboardPage.jsx';
 import './App.css';
 import { AuthProvider, useAuth } from './helpers/wrapper.jsx';
 import Modal from 'react-modal';
 import LoadingScreen from './components/LoadingScreen.jsx';
+import RequestHoliday from './pages/HolidaysRequestAndAbsences.jsx';
 
 Modal.setAppElement('#root');
 // Wrap protected routes
@@ -21,11 +19,7 @@ const ProtectedRoute = ({ children }) => {
     return <LoadingScreen />; // Or a spinner
   }
 
-  return isAuthenticated ? (
-    children
-  ) : (
-    <Navigate to="/login" replace />
-  );
+  return isAuthenticated ? children : <Navigate to="/login" replace />;
 };
 
 const App = () => {
@@ -46,22 +40,20 @@ const App = () => {
               </ProtectedRoute>
             }
           >
-            {/* Nested routes inside MainMenu */}
-            {/* <Route path="lineup" element={<LineUP />} /> */}
-            {/* <Route path="pings" element={<Pings />} /> */}
-            {/* <Route path="hey" element={<Hey />} /> */}
-            {/* <Route path="activity" element={<Activity />} /> */}
-            <Route path="MySchedule" element={<div>My Schedule Page</div>} />
-            <Route 
-              path="HolidaysRequest" 
-              element={<HolidaysRequestAndAbsences />} 
-            />
-            <Route path="invitePeople" element={<InvitePeople />} />
-            <Route path="dashboard" element={<DashboardPage />} />
+            <Route path='*' element={<Navigate to="/mainmenu" replace />} />
           </Route>
 
+          <Route 
+            path="/RequestHoliday" 
+            element={
+              <ProtectedRoute>
+                <RequestHoliday />
+              </ProtectedRoute>
+            } 
+          />
+
           {/* Catch-all route */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<Navigate to="/mainmenu" replace />} />
         </Routes>
       </Router>
     </AuthProvider>
