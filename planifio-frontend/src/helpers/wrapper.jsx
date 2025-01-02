@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }) => {
   // Login function
   const login = async (email, password) => {
     try {
-      const response = await axiosInstance.post('/api/login', { email, password });
+      const response = await axiosInstance.post('/api/auth/login', { email, password });
       
       // Store token in localStorage
       localStorage.setItem('token', response.data.token);
@@ -60,7 +60,7 @@ export const AuthProvider = ({ children }) => {
       if (token) {
         try {
           // You'll need a backend route to verify the token
-          const response = await axiosInstance.get('/api/verify', {
+          const response = await axiosInstance.get('/api/auth/verify', {
             headers: { Authorization: `Bearer ${token}` }
           });
           

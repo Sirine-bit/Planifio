@@ -1,6 +1,8 @@
 import React, { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { User, Mail, Building, Lock, Upload, X } from 'lucide-react';
+import logo from '../assets/logo.png';
+
 
 const SignupPage = () => {
   const [formData, setFormData] = useState({
@@ -49,7 +51,7 @@ const SignupPage = () => {
     e.preventDefault();
   
     try {
-      const response = await fetch('http://localhost:5000/api/signup', {
+      const response = await fetch('http://localhost:5000/api/auth/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -84,7 +86,7 @@ const SignupPage = () => {
       <div className="w-full max-w-md p-5 relative z-10">
         <div className="bg-white/95 backdrop-blur-md rounded-xl shadow-lg p-8">
           <div className="text-center mb-6">
-            <img src="/assets/logo.png" alt="Planifio Logo" className="max-w-[150px] h-auto mx-auto" />
+            <img src={logo} alt="Planifio Logo" className="max-w-[150px] h-auto mx-auto" />
           </div>
           
           <h2 className="text-2xl font-bold text-center mb-6">Join Planifio</h2>

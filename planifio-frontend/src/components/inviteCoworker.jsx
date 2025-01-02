@@ -59,7 +59,7 @@ const InviteDialog = ({ isOpen, onClose }) => {
     setError('');
     
     try {
-      await axiosInstance.post('/api/users/invite', {
+      await axiosInstance.post('/api/auth/invite', {
         senderFullName: user.username,
         organization: user.organization,
         ...formData

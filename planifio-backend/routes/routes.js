@@ -1,4 +1,26 @@
 const express = require('express');
+const router = express.Router();
+
+const authRoutes = require('./authRoutes');
+const userRoutes = require('./userRoutes');
+const assignmentRoutes = require('./assignmentRoutes');
+const projectRoutes = require('./projectRoutes');
+const messageRoutes = require('./messageRoutes');
+const notificationRoutes = require('./notificationRoutes');
+const eventRoutes = require('./eventRoutes');
+
+router.use('/auth', authRoutes);
+router.use('/users', userRoutes);
+router.use('/assignments', assignmentRoutes);
+router.use('/projects', projectRoutes);
+router.use('/conversations', messageRoutes);
+router.use('/notifications', notificationRoutes);
+router.use('/events', eventRoutes);
+
+module.exports = router;
+
+/*
+const express = require('express');
 const User = require('../models/User');
 const Project = require('../models/Project');
 const Assignment = require('../models/Assignment');
@@ -451,3 +473,4 @@ router.delete('/events/:id', async (req, res) => {
 
 
 module.exports = router;
+*/

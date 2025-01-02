@@ -130,7 +130,7 @@ const ChatModal = ({ isOpen, onClose }) => {
                   <Avatar
                     imageUrl={conversation.participants.find(
                       participant => participant._id !== user.id
-                    )?.profileImage ?? '../../public/assets/profile.png'}
+                    )?.profileImage ?? '../src/assets/profile.png'}
                     size="sm"
                     className='flex-shrink-0'
                   />
@@ -159,7 +159,7 @@ const ChatModal = ({ isOpen, onClose }) => {
             >
               <div className="flex items-center space-x-2">
                 <Avatar
-                  imageUrl={member.profileImage ?? '../../public/assets/profile.png'}
+                  imageUrl={member.profileImage ?? '../src/assets/profile.png'}
                   size="sm"
                   className='flex-shrink-0'
                 />

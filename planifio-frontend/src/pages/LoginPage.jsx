@@ -4,6 +4,7 @@ import './SignupPage.css';
 import { FaEnvelope, FaLock } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../helpers/wrapper';
+import logo from '../assets/logo.png';
 
 
 const LoginPage = () => {
@@ -26,7 +27,7 @@ const LoginPage = () => {
       setError(error.response?.data?.message || 'Error while connecting');
     }
     // try {
-    //   const response = await fetch('http://localhost:5000/api/login', {
+    //   const response = await fetch('http://localhost:5000/api/auth/login', {
     //     method: 'POST',
     //     headers: {
     //       'Content-Type': 'application/json'
@@ -52,7 +53,7 @@ const LoginPage = () => {
       <div className="signup-container">
         <div className="signup-card shadow p-4 rounded-lg">
           <div className="logo-container text-center mb-4 w-full justify-center flex">
-            <img src="/assets/logo.png" alt="Planifio Logo" className="logo" />
+            <img src={logo} alt="Planifio Logo" className="logo" />
           </div>
           <h2 className="text-center mb-4">Login to Your Planifio</h2>
           {error && <p className="text-danger">{error}</p>}
