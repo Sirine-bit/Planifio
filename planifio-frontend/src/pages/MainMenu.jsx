@@ -15,6 +15,7 @@ import NotificationDropdown from "../components/Notifications.jsx";
 import InviteDialog from "../components/inviteCoworker.jsx";
 import ProfileDropdown from "../components/ProfileView..jsx";
 import Calendar from "../components/Calendar.jsx";
+import logo from '../assets/logo.png';
 
 const MainMenu = () => {
   const [showMyStaffMenu, setShowMyStaffMenu] = useState(false);
@@ -108,7 +109,7 @@ const MainMenu = () => {
     <div className="main-menu">
       <header className="main-menu-header">
         <a className="logo cursor-pointer decoration-solid" href="/">
-          <img src="/assets/logo.png" alt="Planifio Logo" />
+          <img src={logo} alt="Planifio Logo" />
           <span className="logo-text">Planifio</span>
         </a>
         <nav className="navbar">

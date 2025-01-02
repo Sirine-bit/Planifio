@@ -14,7 +14,8 @@ router.post('/signup', async (req, res) => {
     if (existingUser) {
       return res.status(400).json({ message: 'User already exists' });
     }
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password.trim(), 10);
+    
     const newUser = new User({
       username,
       email,
@@ -22,7 +23,11 @@ router.post('/signup', async (req, res) => {
       organization,
       profileImage: image
     });
+
     await newUser.save();
+
+    const testPassword = await bcrypt.compare(password, hashedPassword);
+    console.log('Password verification test after signup:', testPassword);
     res.status(201).json({ message: 'Account created successfully!' });
   } catch (err) {
     console.error(err);
@@ -31,7 +36,8 @@ router.post('/signup', async (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password: rawPassword } = req.body;
+  const password = rawPassword.trim();
   try {
     const user = await User.findOne({ email });
     if (!user) {

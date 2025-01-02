@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import logo  from '../assets/logo.png';
 
 const RequestHoliday = () => {
   const [formData, setFormData] = useState({
@@ -66,7 +67,7 @@ const RequestHoliday = () => {
         <div className="signup-card shadow-lg p-6 rounded-lg">
           {/* Logo */}
           <div className="logo-container text-center mb-6">
-            <img src="/assets/logo.png" alt="Planifio Logo" className="logo w-16 h-16" />
+            <img src={logo} alt="Planifio Logo" className="logo w-16 h-16" />
           </div>
 
           <h1 className="form-title text-2xl font-bold mb-8">Request a Holiday</h1>

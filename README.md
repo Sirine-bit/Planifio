@@ -1,70 +1,146 @@
-# Getting Started with Create React App
+# Planifio - Project Management System
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Overview
+Planifio is a comprehensive project management and team collaboration platform that enables organizations to manage projects, assignments, team communication, and scheduling in one unified system.
 
-## Available Scripts
+## Features
+- 🔐 **User Authentication & Authorization**
+  - Secure signup and login system
+  - JWT-based authentication
+  - Organization-based user management
+  - User invitation system with email notifications
 
-In the project directory, you can run:
+- 👥 **Team Management**
+  - Organization-based team structure
+  - User profiles with customizable images
+  - Team member directory
+  - Role-based access control
 
-### `npm start`
+- 📋 **Project Management**
+  - Create and manage multiple projects
+  - Assign team members to projects
+  - Track project progress
+  - Team collaboration features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- ✅ **Task Management**
+  - Create and assign tasks
+  - Track task completion status
+  - Task details and descriptions
+  - User-specific task views
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- 💬 **Communication**
+  - Real-time messaging system
+  - One-on-one conversations
+  - Message read receipts
+  - Conversation history
 
-### `npm test`
+- 🔔 **Notifications**
+  - Real-time notification system
+  - Custom notification types
+  - Click tracking for notifications
+  - Notification prioritization (severity levels)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- 📅 **Calendar & Events**
+  - Event scheduling and management
+  - Monthly/yearly calendar views
+  - User-specific event tracking
+  - Date-based event filtering
 
-### `npm run build`
+## Technical Stack
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Backend
+- **Framework**: Node.js with Express
+- **Database**: MongoDB with Mongoose ODM
+- **Authentication**: JWT (JSON Web Tokens)
+- **Email Service**: Custom email service for notifications
+- **Security**: bcrypt for password hashing
+- **Middleware**: CORS enabled
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### API Structure
+```
+/api
+├── /auth
+│   ├── /signup      # User registration
+│   ├── /login       # User authentication
+│   ├── /verify      # Token verification
+│   └── /invite      # Team member invitation
+├── /users
+│   └── /           # User management
+├── /projects
+│   ├── /           # Project CRUD
+│   └── /:id        # Project operations
+├── /assignments
+│   ├── /           # Assignment creation
+│   ├── /:userId    # User assignments
+│   └── /:id        # Assignment updates
+├── /conversations
+│   ├── /           # Conversation management
+│   ├── /:id/messages    # Message operations
+│   └── /:id/seen       # Read receipts
+├── /notifications
+│   ├── /           # Notification management
+│   └── /:id/click  # Notification interactions
+└── /events
+    ├── /           # Event creation
+    ├── /:userId    # User events
+    └── /:id        # Event operations
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Getting Started
 
-### `npm run eject`
+### Prerequisites
+- Node.js (v14 or higher)
+- MongoDB
+- npm or yarn
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Environment Variables
+Create a `.env` file in the root directory with the following variables:
+```
+PORT=5000
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret_key
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Installation
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+1. Clone the repository:
+```bash
+git clone [repository-url]
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+2. Install dependencies:
+```bash
+npm install
+```
 
-## Learn More
+3. Start the development server:
+```bash
+npm run dev
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Setting Up the Database
+The application will automatically create the necessary collections in MongoDB when it first runs. Make sure your MongoDB instance is running and accessible.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## API Security
+- All sensitive routes are protected with JWT authentication
+- Passwords are hashed using bcrypt
+- CORS is configured for secure cross-origin requests
+- Request rate limiting is implemented
+- Input validation on all routes
 
-### Code Splitting
+## Best Practices
+- Keep environment variables secure and never commit them
+- Regularly update dependencies for security patches
+- Follow the established code structure for new features
+- Write clear commit messages
+- Test new features thoroughly before deployment
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Contributing
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
 
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## License
+This project is licensed under the MIT License - see the LICENSE file for details.

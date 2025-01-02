@@ -1,4 +1,5 @@
 import React from 'react';
+import logo from '../assets/logo.png';
 
 const LoadingScreen = () => {
   return (
@@ -8,7 +9,7 @@ const LoadingScreen = () => {
         <div className="w-32 h-32 rounded-full border-8 border-blue-200/30 border-t-blue-400 animate-spin" />
         
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-            <img src="/assets/logo.png" alt="Planifio Logo" className="w-32 max-w-xs" />
+            <img src={logo} alt="Planifio Logo" className="w-32 max-w-xs" />
         </div>
         
         {/* Orbiting dots */}
