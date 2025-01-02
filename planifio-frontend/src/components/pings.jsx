@@ -97,6 +97,8 @@ const ChatModal = ({ isOpen, onClose }) => {
     }
   };
 
+  console.log('members:', conversations);
+
   const selectConversation = async (conversation) => {
     await fetchMessages(conversation._id);
     setSelectedConversation(conversation);
@@ -116,7 +118,7 @@ const ChatModal = ({ isOpen, onClose }) => {
         <div className="flex h-full">
           {/* Conversations List */}
           <div className="w-1/3 border-r overflow-y-auto">
-            {conversations.map((conversation) => (
+            {conversations && conversations.map((conversation) => (
               <div
                 key={conversation._id}
                 onClick={() => selectConversation(conversation)}
@@ -136,7 +138,7 @@ const ChatModal = ({ isOpen, onClose }) => {
                     <p className="text-sm font-medium truncate">
                       {conversation.participants.find(
                       participant => participant._id !== user.id
-                    ).username}
+                    )?.username}
                     </p>
                     <p className="text-xs text-gray-500 truncate">
                       {conversation.lastMessage ? conversation.lastMessage?.content : 'Start a conversation'}
